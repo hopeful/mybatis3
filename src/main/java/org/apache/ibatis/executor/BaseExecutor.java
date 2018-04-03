@@ -51,10 +51,11 @@ public abstract class BaseExecutor implements Executor {
 
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
+  /**事物**/
   protected Transaction transaction;
   protected Executor wrapper;
-
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
+  /**本地缓存**/
   protected PerpetualCache localCache;
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
@@ -197,13 +198,18 @@ public abstract class BaseExecutor implements Executor {
       throw new ExecutorException("Executor was closed.");
     }
     CacheKey cacheKey = new CacheKey();
+    /**cacheKey关联MappedStatement id **/
     cacheKey.update(ms.getId());
+    /**分页偏移**/
     cacheKey.update(rowBounds.getOffset());
+    /**分页大小**/
     cacheKey.update(rowBounds.getLimit());
+    /**可执行SQL**/
     cacheKey.update(boundSql.getSql());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
     // mimic DefaultParameterHandler logic
+    /**将每一个要传递给JDBC的参数值也更新到CacheKey中**/
     for (ParameterMapping parameterMapping : parameterMappings) {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
@@ -218,11 +224,13 @@ public abstract class BaseExecutor implements Executor {
           MetaObject metaObject = configuration.newMetaObject(parameterObject);
           value = metaObject.getValue(propertyName);
         }
+        /**cacheKey关联parameterMapping value  **/
         cacheKey.update(value);
       }
     }
     if (configuration.getEnvironment() != null) {
       // issue #176
+      /**cacheKey关联environment id **/
       cacheKey.update(configuration.getEnvironment().getId());
     }
     return cacheKey;

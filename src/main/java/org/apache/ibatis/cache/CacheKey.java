@@ -23,6 +23,7 @@ import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * @author Clinton Begin
+ * 计算公式：hashcode=multiplier * hashcode + object.hashCode()*count
  */
 public class CacheKey implements Cloneable, Serializable {
 
@@ -32,12 +33,16 @@ public class CacheKey implements Cloneable, Serializable {
 
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
-
+  /**乘数，固定初始值质数37，不会变**/
   private final int multiplier;
+  /**当前hashCode值，初始值是质数17，**/
   private int hashcode;
+  /**所有更新对象的初始hashCode的和**/
   private long checksum;
+  /**更新的对象总数**/
   private int count;
   // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
+  /**更新的对象集合**/
   private List<Object> updateList;
 
   public CacheKey() {
@@ -57,12 +62,14 @@ public class CacheKey implements Cloneable, Serializable {
   }
 
   public void update(Object object) {
+    /**得到对象的hashcode**/
     int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object); 
-
+    /**对象计数递增**/
     count++;
     checksum += baseHashCode;
+    /**对象的hashcode 扩大count倍**/
     baseHashCode *= count;
-
+    /**hashCode * 拓展因子（默认37）+拓展扩大后的对象hashCode值 **/
     hashcode = multiplier * hashcode + baseHashCode;
 
     updateList.add(object);
