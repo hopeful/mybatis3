@@ -25,7 +25,7 @@ import org.apache.ibatis.cache.CacheException;
 /**
  * @author Clinton Begin
  *
- * 默认缓存实现类
+ * 默认缓存实现类 对HashMap简单的封装
  */
 public class PerpetualCache implements Cache {
 

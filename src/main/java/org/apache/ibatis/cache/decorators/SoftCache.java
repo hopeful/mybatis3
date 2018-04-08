@@ -60,6 +60,7 @@ public class SoftCache implements Cache {
 
   @Override
   public void putObject(Object key, Object value) {
+    /**清除已经被GC回收掉的引用**/
     removeGarbageCollectedItems();
     delegate.putObject(key, new SoftEntry(key, value, queueOfGarbageCollectedEntries));
   }

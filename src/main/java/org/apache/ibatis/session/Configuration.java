@@ -97,28 +97,51 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 public class Configuration {
 
   protected Environment environment;
-
+  /**是否允许在嵌套语句中使用分页(RowBounds类主要包含offset和limit属性，用于分页使用)  **/
   protected boolean safeRowBoundsEnabled;
+  /**是否允许在嵌套语句中使用分页（ResultHandler）**/
   protected boolean safeResultHandlerEnabled = true;
+  /**是否开启自动将数据库表字段映射为驼峰命名规则 **/
   protected boolean mapUnderscoreToCamelCase;
+  /**该属性配置为true时，对任意延迟属性的调用会使带有延迟加载属性的对象完整加载；反之，每种属性将会按需加载。**/
   protected boolean aggressiveLazyLoading;
+  /**是否允许单一语句返回多结果集（需要兼容驱动）**/
   protected boolean multipleResultSetsEnabled = true;
+  /**允许 JDBC 支持自动生成主键，需要驱动兼容。 如果设置为 true 则这个设置强制使用自动生成主键，
+   * 尽管一些驱动不能兼容但仍可正常工作（比如 Derby）**/
   protected boolean useGeneratedKeys;
+  /**使用列标签代替列名**/
   protected boolean useColumnLabel = true;
+  /**缓存配置的全局开关**/
   protected boolean cacheEnabled = true;
+  /**指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，
+   * 这对于有 Map.keySet() 依赖或 null 值初始化的时候是有用的。
+   * 注意基本类型（int、boolean等）是不能设置成 null 的。**/
   protected boolean callSettersOnNulls;
+  /****/
   protected boolean useActualParamName = true;
   protected boolean returnInstanceForEmptyRow;
-
+  /**指定 MyBatis 增加到日志名称的前缀**/
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
   protected Class <? extends VFS> vfsImpl;
+  /**
+   * 缓存作用域，分为LocalCacheScope.SESSION和LocalCacheScope.STATEMENT两种。
+   * SESSION表示会缓存一个会话中执行的所有查询。 STATEMENT表示本地会话仅用在语句执行上，对相同SqlSession的不同调用将不会共享数据。
+   * **/
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+  /**当没有为参数提供特定的 JDBC 类型时，为空值指定 JDBC 类型  **/
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+  /**指定哪些方法触发一次延迟加载，当使用了集合中的方法时，会触发数据加载**/
   protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
+  /**设置JDBC的queryTimeout超时时间**/
   protected Integer defaultStatementTimeout;
+  /**设置JDBC的fetchSize属性，用于限制最大获取数据量，防止某些查询返回数据量太大导致OutOfMemory**/
   protected Integer defaultFetchSize;
+  /**配置默认的执行器。SIMPLE 就是普通的执行器；REUSE会重用预处理语句（prepared statements）；BATCH将重用语句并执行批量更新 **/
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
+  /**指定 MyBatis 应如何自动映射列到字段或属性。 NONE 表示取消自动映射；PARTIAL 只会自动映射没有定义嵌套结果集映射的结果集。
+   * FULL 会自动映射任意复杂的结果集（无论是否嵌套）。**/
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
@@ -127,9 +150,11 @@ public class Configuration {
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
+  /**延迟加载的全局开关**/
   protected boolean lazyLoadingEnabled = false;
+  /**代理工厂**/
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
-
+  /**数据库产商ID**/
   protected String databaseId;
   /**
    * Configuration factory class.
@@ -138,25 +163,36 @@ public class Configuration {
    * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
    */
   protected Class<?> configurationFactory;
-
-  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);  /**管理Mapper接口**/
-  protected final InterceptorChain interceptorChain = new InterceptorChain();/**管理拦截器链**/
-  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();/**管理类型处理器**/
-  protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();    /**注册别名，别名都是用的大写**/
-  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry(); /**管理语言驱动**/
-
+  /**管理Mapper接口**/
+  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  /**管理拦截器链**/
+  protected final InterceptorChain interceptorChain = new InterceptorChain();
+  /**管理类型处理器**/
+  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+  /**注册别名，别名都是用的大写**/
+  protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+  /**管理语言驱动**/
+  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+  /**解析SQL生成测MappedStatement**/
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
+  /**缓存Cache**/
   protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
+  /**resultMapp映射结果集**/
   protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
+  /**keyGenerators 结果集**/
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
-
+  /**资源加载结合**/
   protected final Set<String> loadedResources = new HashSet<String>();
+  /**标签<sql />片段**/
   protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
-
+  /**XMLStatement 解析失败重试机制**/
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
+  /**CacheRef 解析失败重试机制**/
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
+  /**ResultMap 解析失败重试机制**/
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
+  /**Method 解析失败重试机制**/
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
 
   /*
