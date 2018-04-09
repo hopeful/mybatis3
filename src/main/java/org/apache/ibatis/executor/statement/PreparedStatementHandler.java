@@ -33,6 +33,8 @@ import org.apache.ibatis.session.RowBounds;
 
 /**
  * @author Clinton Begin
+ *
+ *预编译SQL处理方式,第一次执行sql语句时会进行预编译，在接下来执行相同的SQL语句时会提高数据库性能
  */
 public class PreparedStatementHandler extends BaseStatementHandler {
 

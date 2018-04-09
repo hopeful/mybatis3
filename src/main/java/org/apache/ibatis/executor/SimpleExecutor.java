@@ -33,6 +33,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 简单的SQL执行类,不会做处理直接执行SQL
  */
 public class SimpleExecutor extends BaseExecutor {
 

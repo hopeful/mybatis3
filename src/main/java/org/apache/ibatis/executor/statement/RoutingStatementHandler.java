@@ -31,6 +31,8 @@ import org.apache.ibatis.session.RowBounds;
 
 /**
  * @author Clinton Begin
+ *
+ * 路由StatementHandler
  */
 public class RoutingStatementHandler implements StatementHandler {
 

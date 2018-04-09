@@ -33,6 +33,8 @@ import org.apache.ibatis.session.RowBounds;
 
 /**
  * @author Clinton Begin
+ *
+ * SimpleStatementHandler 主要用执行简单的SQL语句,简单SQL语句是指SQL语句中没有变量,不会通过外部进行参数传入
  */
 public class SimpleStatementHandler extends BaseStatementHandler {
 
