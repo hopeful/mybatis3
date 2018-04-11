@@ -36,7 +36,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
- * @author Jeff Butler 
+ * @author Jeff Butler
+ *
+ * BatchExecutor-批处理实现类
  */
 public class BatchExecutor extends BaseExecutor {
 

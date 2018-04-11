@@ -35,6 +35,9 @@ import java.util.List;
  * @author Clinton Begin
  *
  * 简单的SQL执行类,不会做处理直接执行SQL
+ *
+ * 简单的处理实现类，即基本每次对相同的sql语句都会创建新的Statement
+ * 对象；
  */
 public class SimpleExecutor extends BaseExecutor {
 

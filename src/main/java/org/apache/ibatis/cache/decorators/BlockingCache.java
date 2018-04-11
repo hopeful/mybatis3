@@ -33,6 +33,8 @@ import org.apache.ibatis.cache.CacheException;
  * 
  * @author Eduardo Macarron
  *
+ * 阻塞策略
+ *
  */
 public class BlockingCache implements Cache {
 

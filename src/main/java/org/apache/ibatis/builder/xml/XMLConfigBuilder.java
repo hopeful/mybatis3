@@ -50,6 +50,8 @@ import org.apache.ibatis.type.TypeHandler;
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ *
+ * 解析XMLConfig主要入口方法
  */
 public class XMLConfigBuilder extends BaseBuilder {
 

@@ -35,6 +35,10 @@ import org.apache.ibatis.transaction.Transaction;
 
 /**
  * @author Clinton Begin
+ *
+ * 重复用执行器
+ *
+ * ReuseExecutor-复用处理实现类，即对相同的sql语句会缓存Statement对象；
  */
 public class ReuseExecutor extends BaseExecutor {
 

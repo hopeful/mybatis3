@@ -90,12 +90,18 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
+      /**获取环境配置**/
       final Environment environment = configuration.getEnvironment();
+      /**根据环境配置,生成事务工程类**/
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      /**生成事务处理器**/
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
+      /**根据执行器配置,生成相关的执行器**/
       final Executor executor = configuration.newExecutor(tx, execType);
+      /**产生Mybatis会话机制**/
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
+      /**出现异常进行事务回滚**/
       closeTransaction(tx); // may have fetched a connection so lets call close()
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
     } finally {

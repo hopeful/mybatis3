@@ -43,14 +43,14 @@ import org.apache.ibatis.session.SqlSession;
  *
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
- *
+ * 默认Sql SESSION会话
  * @author Clinton Begin
  */
 public class DefaultSqlSession implements SqlSession {
 
   private final Configuration configuration;
   private final Executor executor;
-
+  /**事务自动提交**/
   private final boolean autoCommit;
   private boolean dirty;
   private List<Cursor<?>> cursorList;
@@ -144,6 +144,7 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
+      /**获取SQL MappedStatement**/
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {

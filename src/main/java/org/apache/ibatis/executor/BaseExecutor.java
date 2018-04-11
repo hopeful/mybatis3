@@ -46,6 +46,9 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
+ *
+ * BaseExecutor抽象类提供了对CRUD操作的入口，并带有缓存效应，子类只需要复写
+ * doUpdate()和doQuery()抽象方法即可
  */
 public abstract class BaseExecutor implements Executor {
 
@@ -144,16 +147,22 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
+    /**是否清除缓存**/
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
     List<E> list;
     try {
       queryStack++;
+      /**如果查询的语句已存在本地缓存中，则直接从本地获取，反之从数据库中读取内容**/
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
+        /**此处尝试对Callable类型的表达式进行处理，主要是针对mode=out类型的参数
+         * 此参数主要是通过map来定义，直接从map中获取
+         * **/
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
+        /**从数据库中获取并进行缓存处理，其也会调用子类需复写的doQuery()方法**/
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
