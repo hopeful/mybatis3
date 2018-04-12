@@ -26,11 +26,8 @@ import org.apache.ibatis.reflection.ArrayUtil;
  * 计算公式：hashcode=multiplier * hashcode + object.hashCode()*count
  */
 public class CacheKey implements Cloneable, Serializable {
-
   private static final long serialVersionUID = 1146682552656046210L;
-
   public static final CacheKey NULL_CACHE_KEY = new NullCacheKey();
-
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
   /**乘数，固定初始值质数37，不会变**/
@@ -44,19 +41,16 @@ public class CacheKey implements Cloneable, Serializable {
   // 8/21/2017 - Sonarlint flags this as needing to be marked transient.  While true if content is not serializable, this is not always true and thus should not be marked transient.
   /**更新的对象集合**/
   private List<Object> updateList;
-
   public CacheKey() {
     this.hashcode = DEFAULT_HASHCODE;
     this.multiplier = DEFAULT_MULTIPLYER;
     this.count = 0;
     this.updateList = new ArrayList<Object>();
   }
-
   public CacheKey(Object[] objects) {
     this();
     updateAll(objects);
   }
-
   public int getUpdateCount() {
     return updateList.size();
   }
